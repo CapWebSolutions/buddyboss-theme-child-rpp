@@ -266,7 +266,7 @@ if (bp_is_my_profile()) {
                                                         <option value="">Select Type</option>
                                                         <option value="Referral">Referral</option>
                                                         <option value="Payment">Payment</option>
-                                                        <option value="Relationship">Relationship</option>
+                                                        <option value="Networking">Networking</option>
                                                     </select>
                                                     <?php if (!empty($errors["type_of_referral"])) echo '<p class="error">' . esc_html($errors["type_of_referral"]) . '</p>'; ?>
 
