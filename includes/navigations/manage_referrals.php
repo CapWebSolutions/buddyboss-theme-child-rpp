@@ -289,21 +289,21 @@ function filter_referrals_ajax()
             <tbody>
                 <?php
                 if (!empty($referral_table)) :
-                    $count_referral = $count_relationship = $count_payments = 0;
+                    $count_referral = $count_networking = $count_payments = 0;
                     foreach ($referral_table as $key => $referral) :
                         
 
-                        $type_referral = $type_relationship = $type_payments = 0;
+                        $type_referral = $type_networking = $type_payments = 0;
 
                         $type_referral = isset($referral['Referral']) ? $type_referral + $referral['Referral'] : $type_referral;
-                        $type_relationship = isset($referral['Relationship']) ? $type_relationship + $referral['Relationship'] : $type_relationship;
+                        $type_networking = isset($referral['Networking']) ? $type_networking + $referral['Networking'] : $type_networking;
                         $type_payments = isset($referral['Payment']) ? $type_payments + $referral['Payment'] : $type_payments;
 
                         $count_referral += $type_referral;
-                        $count_relationship += $type_relationship;
+                        $count_networking += $type_networking;
                         $count_payments += $type_payments;
 
-                        $count = $type_referral + $type_relationship + $type_payments;
+                        $count = $type_referral + $type_networking + $type_payments;
 
                 ?>
                         <tr>
@@ -314,7 +314,7 @@ function filter_referrals_ajax()
                                 <?php echo $type_referral; ?>
                             </td>
                             <td>
-                                <?php echo $type_relationship; ?>
+                                <?php echo $type_networking; ?>
                             </td>
                             <td>
                                 <?php echo $type_payments; ?>
@@ -328,9 +328,9 @@ function filter_referrals_ajax()
                     <tr>
                         <td><strong>Total</strong></td>
                         <td><?php echo $count_referral; ?></td>
-                        <td><?php echo $count_relationship; ?></td>
+                        <td><?php echo $count_networking; ?></td>
                         <td><?php echo $count_payments; ?></td>
-                        <td><?php echo ($count_referral + $count_relationship + $count_payments); ?></td>
+                        <td><?php echo ($count_referral + $count_networking + $count_payments); ?></td>
                     </tr>
                 <?php else : ?>
                     <tr>
@@ -359,20 +359,20 @@ function filter_referrals_ajax()
                 <?php
                 if (!empty($referrals_received_table)) :
 
-                    $count_referral = $count_relationship = $count_payments = 0;
-                    $type_referral = $type_relationship = $type_payments = 0;
+                    $count_referral = $count_networking = $count_payments = 0;
+                    $type_referral = $type_networking = $type_payments = 0;
 
                     foreach ($referrals_received_table as $key =>  $referral) :
 
                         $type_referral = isset($referral['Referral']) ? $type_referral + $referral['Referral'] : $type_referral;
-                        $type_relationship = isset($referral['Relationship']) ? $type_relationship + $referral['Relationship'] : $type_relationship;
+                        $type_networking = isset($referral['Networking']) ? $type_networking + $referral['Networking'] : $type_networking;
                         $type_payments = isset($referral['Payment']) ? $type_payments + $referral['Payment'] : $type_payments;
 
                         $count_referral += $type_referral;
-                        $count_relationship += $type_relationship;
+                        $count_networking += $type_networking;
                         $count_payments += $type_payments;
 
-                        $count = $type_referral + $type_relationship + $type_payments;
+                        $count = $type_referral + $type_networking + $type_payments;
 
                 ?>
                         <tr>
@@ -383,7 +383,7 @@ function filter_referrals_ajax()
                                 <?php echo $type_referral; ?>
                             </td>
                             <td>
-                                <?php echo $type_relationship; ?>
+                                <?php echo $type_networking; ?>
                             </td>
                             <td>
                                 <?php echo $type_payments; ?>
@@ -396,9 +396,9 @@ function filter_referrals_ajax()
                     <tr>
                         <td><strong>Total</strong></td>
                         <td><?php echo $count_referral; ?></td>
-                        <td><?php echo $count_relationship; ?></td>
+                        <td><?php echo $count_networking; ?></td>
                         <td><?php echo $count_payments; ?></td>
-                        <td><?php echo ($count_referral + $count_relationship + $count_payments); ?></td>
+                        <td><?php echo ($count_referral + $count_networking + $count_payments); ?></td>
                     </tr>
                 <?php else : ?>
                     <tr>
