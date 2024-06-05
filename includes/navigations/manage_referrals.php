@@ -281,7 +281,7 @@ function filter_referrals_ajax()
                 <tr>
                     <th>Name</th>
                     <th>Referrals</th>
-                    <th>Relationships</th>
+                    <th>Networking</th>
                     <th>Payments</th>
                     <th>Total</th>
                 </tr>
@@ -350,7 +350,7 @@ function filter_referrals_ajax()
                 <tr>
                     <th>Name</th>
                     <th>Referrals</th>
-                    <th>Relationships</th>
+                    <th>Networking</th>
                     <th>Payments</th>
                     <th>Total</th>
                 </tr>
