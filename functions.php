@@ -378,18 +378,46 @@ function activate_pending_buddypress_user( $user_id ) {
 add_action( 'bp_core_activated_user', 'activate_pending_buddypress_user' );
 
 
-// Adding custom buttons on the Members loop
-function test_add_button_in_members_loop() {
-  if ( bp_get_member_user_id() == bp_loggedin_user_id() ) {
-    return;
-  }
-  ?>
-    <div id="block-a-member" class="generic-button">
-      <a data-balloon-pos="down" data-balloon="TEST" href="/members/" class="block-member">Button Text</a>
-    </div>
-    <div id="block-a-member" class="generic-button">
-      <a data-balloon-pos="down" data-balloon="TEST" href="/members/" class="block-member">Another Button</a>
-    </div>
-  <?php
-  }
-  add_action( 'bp_member_members_list_item', 'test_add_button_in_members_loop' );
+
+/**
+ * Get list of active chapters for use in Manage Referrals screens
+ *
+ * @param array $active_chapters
+ * @return array
+ */
+if ( !function_exists('get_active_chapter_list') ) {
+  function get_active_chapter_list( $unique_chapters ){
+    global $bp, $wpdb;
+
+    $user_id = bp_displayed_user_id();
+    $chapters = array();
+    // Save current user displayed as default.
+    $default_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $user_id));
+
+    $users = get_users( 'fields=ID' ); // Retrieve all user ids
+    foreach ($users as $user) {
+        $chapter_name = bp_get_profile_field_data(array('field' => 11, 'user_id' => $user));
+        if (!empty($chapter_name)) {
+            $chapters[] = $chapter_name; // Add unique to the list
+        }
+    }
+
+    $unique_chapters = array_unique($chapters); // Remove duplicates
+    sort($unique_chapters); // Sort unique in ascending order
+    array_splice( $unique_chapters, 0, 0, $default_chapter ); // Stuff default in at beginning 
+    error_log( print_r( (object)
+      [
+        'file' => __FILE__,
+        'method' => __METHOD__,
+        'line' => __LINE__,
+        'dump' => [
+          $unique_chapters,
+        ],
+      ], true ) );
+      var_dump($unique_chapters);
+
+    return $unique_chapters;
+
+  };
+}
+

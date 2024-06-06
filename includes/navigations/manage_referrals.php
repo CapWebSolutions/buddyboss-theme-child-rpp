@@ -12,6 +12,7 @@ if (!function_exists('custom_manage_referral_nav_content')) {
         $end_date_sent = '';
         $start_date_received = '';
         $end_date_received = '';
+        $unique_chapters = [];
 
         // Check if the form is submitted for Referral Sent
         if (isset($_POST["submit_sent"])) {
@@ -63,7 +64,25 @@ if (!function_exists('custom_manage_referral_nav_content')) {
                     <form id="sent-referral-form" method="post">
                         <input type="date" id="start_date_sent" name="start_date_sent"> -
                         <input type="date" id="end_date_sent" name="end_date_sent">
-                        <input type="submit" name="submit_sent" value="Filter">
+
+                            <label for="selected_chapter">Select Chapter: </label>
+
+                            <select name="selected_chapter" id="selected_chapter">
+
+                                <?php
+                                    $our_chapters = get_active_chapter_list( $unique_chapters );
+                                    $cnt = count($our_chapters);
+                                    for ($i = 1; $i < $cnt; $i++) { 
+                                        if  ( $our_chapters[0] === $our_chapters[$i] ) {
+                                            echo '<option selected="' . $our_chapters[$i] . '">' . $our_chapters[$i] . '</option><br>';
+                                        } else {
+                                            echo '<option value="' . $our_chapters[$i] . '">' . $our_chapters[$i] . '</option><br>';
+                                        }
+                                    }
+                                ?>
+                                
+                            </select>
+                            <input type="submit" name="submit_sent" value="Filter">
                     </form>
                 </div>
             </div>
