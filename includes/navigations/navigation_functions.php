@@ -12,7 +12,13 @@ if (!function_exists('custom_add_referrals_nav')) {
 
             $unseen_referrals_count = get_unseen_referrals_count();
             $user_id = bp_displayed_user_id();
-            $chapter_role  = bp_get_profile_field_data(array('field' => 11, 'user_id' => $user_id));
+            $chapter_role = bp_get_profile_field_data(array('field' => 11, 'user_id' => $user_id));
+            $user_data = get_userdata($user_id);
+            $user_roles = $user_data->roles;
+            // Determine if user role is a chapter president
+            if (!empty($user_roles) && str_contains(implode(', ', $user_roles),'chapter_president') ) {
+                    $chapter_president = true;
+            }
 
             // Referrals
             bp_core_new_nav_item(
@@ -38,8 +44,9 @@ if (!function_exists('custom_add_referrals_nav')) {
                 )
             );
 
-            // Manage Referrals
-            if ($chapter_role === 'Lititz') {
+            // Manage Referrals - only available for users with role=chapter_president
+            // if ($chapter_role === 'Lititz') {
+            if ( $chapter_president ) {
                 bp_core_new_nav_item(
                     array(
                         'name' => 'Manage Referrals',
