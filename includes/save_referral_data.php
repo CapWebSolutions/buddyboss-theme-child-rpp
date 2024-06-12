@@ -55,6 +55,13 @@ if (!function_exists('save_referral_data')) {
 
         // Get the current logged-in user ID
         $sender_id = get_current_user_id();
+        $sender_chapter = get_buddyboss_profile_data($sender_id);
+        var_dump($sender_chapter);
+
+        // Get the current DISPLAYED user's ID and chapter. This will be the recipient of the referral. 
+        $current_displayed_user_id = bp_displayed_user_id();
+        $displayed_user_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $current_displayed_user_id));
+        var_dump($displayed_user_chapter);
 
         // Insert data into custom table with sender and recipient ID
         $table_name = $wpdb->prefix . 'show_referrals';

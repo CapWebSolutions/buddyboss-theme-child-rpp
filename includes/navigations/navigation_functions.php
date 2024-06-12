@@ -7,18 +7,12 @@
 if (!function_exists('custom_add_referrals_nav')) {
     function custom_add_referrals_nav()
     {
-        if (is_user_logged_in() && bp_displayed_user_id() == get_current_user_id()) {
+        if (is_user_logged_in() && ( ( bp_displayed_user_id() == get_current_user_id() ) || is_chapter_president() ) ) {
+
+        // if (is_user_logged_in() && bp_displayed_user_id() == get_current_user_id()) {
             global $bp, $wpdb;
 
             $unseen_referrals_count = get_unseen_referrals_count();
-            $user_id = bp_displayed_user_id();
-            $chapter_role = bp_get_profile_field_data(array('field' => 11, 'user_id' => $user_id));
-            $user_data = get_userdata($user_id);
-            $user_roles = $user_data->roles;
-            // Determine if user role is a chapter president
-            if (!empty($user_roles) && str_contains(implode(', ', $user_roles),'chapter_president') ) {
-                    $chapter_president = true;
-            }
 
             // Referrals
             bp_core_new_nav_item(
@@ -46,7 +40,7 @@ if (!function_exists('custom_add_referrals_nav')) {
 
             // Manage Referrals - only available for users with role=chapter_president
             // if ($chapter_role === 'Lititz') {
-            if ( $chapter_president ) {
+            if ( is_chapter_president() ) {
                 bp_core_new_nav_item(
                     array(
                         'name' => 'Manage Referrals',
@@ -100,7 +94,7 @@ if (!function_exists('custom_my_referral_history_nav_screen')) {
 if (!function_exists('custom_manage_referral_nav_screen')) {
     function custom_manage_referral_nav_screen()
     {
-        if (is_user_logged_in() && bp_displayed_user_id() == get_current_user_id()) {
+        if (is_user_logged_in() && ( ( bp_displayed_user_id() == get_current_user_id() ) || is_chapter_president() ) ) {
             add_action('bp_template_content', 'custom_manage_referral_nav_content');
             bp_core_load_template(apply_filters('bp_core_template_plugin', 'members/single/plugins'));
         }
@@ -113,7 +107,8 @@ if (!function_exists('custom_manage_referral_nav_screen')) {
 if (!function_exists('custom_manage_member_nav_screen')) {
     function custom_manage_member_nav_screen()
     {
-        if (is_user_logged_in() && bp_displayed_user_id() == get_current_user_id()) {
+        // if (is_user_logged_in() && bp_displayed_user_id() == get_current_user_id()) {
+        if (is_user_logged_in() && ( ( bp_displayed_user_id() == get_current_user_id() ) || is_chapter_president() ) ) {
             add_action('bp_template_content', 'custom_manage_member_nav_content');
             bp_core_load_template(apply_filters('bp_core_template_plugin', 'members/single/plugins'));
         }
@@ -202,7 +197,7 @@ if (!function_exists('generate_referral_html')) {
             $referral_history_data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name WHERE sender_id = %d ORDER BY ref_id DESC", $current_user_id), ARRAY_A);
 
             if (empty($referral_data) && empty($referral_history_data)) {
-                return 'No Referral Found';
+                return 'No Referrals Found';
             }
 
             $is_my_referral_history = bp_is_current_component('my-referral-history');

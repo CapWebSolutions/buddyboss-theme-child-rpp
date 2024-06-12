@@ -28,7 +28,10 @@ if (!function_exists('custom_manage_referral_nav_content')) {
 
         // Retrieve referral sent data if form is submitted for Referral Sent
         if (isset($_POST["submit_sent"])) {
-            $referrals_sent = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent);
+            var_dump($start_date_sent, $end_date_sent);
+            $none_specified = NULL;
+            $referrals_sent = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent, $none_specified );
+            var_dump($referrals_sent);
         }
 
         // Retrieve referral received data if form is submitted for Referral Received
@@ -65,22 +68,32 @@ if (!function_exists('custom_manage_referral_nav_content')) {
                         <input type="date" id="start_date_sent" name="start_date_sent"> -
                         <input type="date" id="end_date_sent" name="end_date_sent">
 
-                            <label for="selected_chapter">Select Chapter: </label>
+                            <label for="sent_selected_chapter">Select Chapter: </label>
 
-                            <select name="selected_chapter" id="selected_chapter">
+                            <select id="sent_selected_chapter" name="sent_selected_chapter">
 
                                 <?php
+                                // Get list of all chapters and pull out those with active referrals
+                                // Build filter for chapter selection using only the active chapters. 
+                                // Set the default selection to be the current displayed user's chapter. 
                                     $our_chapters = get_active_chapter_list( $unique_chapters );
+
+                                    error_log( '__FILE__' . var_export( __FILE__, true ) );
+                                    error_log( '__METHOD__' . var_export( __METHOD__, true ) );
+                                    error_log( '__LINE__ ' . var_export( __LINE__, true ) );
+                                    error_log( '$our_chapters ' . var_export( $our_chapters, true ) );
+
                                     $cnt = count($our_chapters);
+
                                     for ($i = 1; $i < $cnt; $i++) { 
                                         if  ( $our_chapters[0] === $our_chapters[$i] ) {
-                                            echo '<option selected="' . $our_chapters[$i] . '">' . $our_chapters[$i] . '</option><br>';
+                                            echo '<option value="' . $our_chapters[$i] . '" selected>' . $our_chapters[$i] . '</option><br>';
                                         } else {
                                             echo '<option value="' . $our_chapters[$i] . '">' . $our_chapters[$i] . '</option><br>';
                                         }
                                     }
                                 ?>
-                                
+
                             </select>
                             <input type="submit" name="submit_sent" value="Filter">
                     </form>
@@ -99,6 +112,36 @@ if (!function_exists('custom_manage_referral_nav_content')) {
                     <form id="received-referral-form" method="post">
                         <input type="date" class="date-filter" id="start_date_received" name="start_date_received"> -
                         <input type="date" class="date-filter" id="end_date_received" name="end_date_received">
+
+                        <label for="recv_selected_chapter">Select Chapter: </label>
+                        <select id="recv_selected_chapter" name="recv_selected_chapter">
+
+                            <?php
+                            // Get list of all chapters and pull out those with active referrals
+                            // Build filter for chapter selection using only the active chapters. 
+                            // Set the default selection to be the current displayed user's chapter. 
+                                $our_chapters = get_active_chapter_list( $unique_chapters );
+
+                                error_log( '__FILE__' . var_export( __FILE__, true ) );
+                                error_log( '__METHOD__' . var_export( __METHOD__, true ) );
+                                error_log( '__LINE__ ' . var_export( __LINE__, true ) );
+                                error_log( '$our_chapters ' . var_export( $our_chapters, true ) );
+
+                                $cnt = count($our_chapters);
+
+                                for ($i = 1; $i < $cnt; $i++) { 
+                                    if  ( $our_chapters[0] === $our_chapters[$i] ) {
+                                        echo '<option value="' . $our_chapters[$i] . '" selected>' . $our_chapters[$i] . '</option><br>';
+                                    } else {
+                                        echo '<option value="' . $our_chapters[$i] . '">' . $our_chapters[$i] . '</option><br>';
+                                    }
+                                }
+                            ?>
+
+                        </select>
+
+
+
                         <input type="submit" name="submit_received" value="Filter">
                     </form>
                 </div>
@@ -114,6 +157,11 @@ if (!function_exists('custom_manage_referral_nav_content')) {
                     var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
                     var startDateSent = $('#start_date_sent').val();
                     var endDateSent = $('#end_date_sent').val();
+                    var sentSelectedChapter = $('#sent_selected_chapter').val();
+                    // console.log(ajaxurl);
+                    // console.log(startDateSent);
+                    // console.log(endDateSent);
+                    // console.log(sentSelectedChapter); // verified good data
 
                     // Perform AJAX request
                     $.ajax({
@@ -123,12 +171,18 @@ if (!function_exists('custom_manage_referral_nav_content')) {
                         data: {
                             action: 'filter_referrals',
                             start_date_sent: startDateSent,
-                            end_date_sent: endDateSent
+                            end_date_sent: endDateSent,
+                            sent_selected_chapter: sentSelectedChapter
                         },
                         success: function(response) {
                             $('#referral-sent-content').html(response.sent);
+                            console.log(response);
+                        },
+                        error: function(response, status, exception) {
+                            console.log( response, status );
+                            alert('Exception:', exception);
                         }
-                    });
+                    })
                 });
 
                 // Click event handler for "Filter" button for received referrals
@@ -137,6 +191,11 @@ if (!function_exists('custom_manage_referral_nav_content')) {
                     var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
                     var startDateReceived = $('#start_date_received').val();
                     var endDateReceived = $('#end_date_received').val();
+                    var recvSelectedChapter = $('#recv_selected_chapter').val();
+                    // console.log(ajaxurl);
+                    // console.log(startDateSent);
+                    // console.log(endDateSent);
+                    // console.log(recvSelectedChapter); 
 
                     // Perform AJAX request
                     $.ajax({
@@ -146,7 +205,8 @@ if (!function_exists('custom_manage_referral_nav_content')) {
                         data: {
                             action: 'filter_referrals',
                             start_date_received: startDateReceived,
-                            end_date_received: endDateReceived
+                            end_date_received: endDateReceived,
+                            recv_selected_chapter: recvSelectedChapter
                         },
                         success: function(response) {
                             $('#referral-received-content').html(response.received);
@@ -166,23 +226,50 @@ if (!function_exists('custom_manage_referral_nav_content')) {
  * @param string $end_date   The end date of the date range.
  * @return array             An array of referral data for sent referrals within the date range.
  */
-function get_referrals_sent_by_date_range($start_date, $end_date)
+function get_referrals_sent_by_date_range($start_date, $end_date, $sent_selected_chapter)
+// function get_referrals_sent_by_date_range($start_date, $end_date)
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'show_referrals';
-    $current_user_id = bp_displayed_user_id();
+    error_log( '__FILE__' . var_export( __FILE__, true ) );
+    error_log( '__METHOD__' . var_export( __METHOD__, true ) );
+    error_log( '$sent_selected_chapter ' . var_export( $sent_selected_chapter, true ), 3, WP_DEBUG_LOG );
 
-    $referrals_all = $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT * FROM $table_name WHERE sender_id = %d",
-            $current_user_id
-        ),
-        ARRAY_A
-    );
+    // Processing filter for current user. 
+    $current_user_id = bp_displayed_user_id();
+    if ( is_null( $sent_selected_chapter ) ) {
+        $referrals_all = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM $table_name WHERE sender_id = %d",
+                $current_user_id
+            ),
+            ARRAY_A
+        );
+    } else {
+        // Processing filter for provided chapter
+        // Get list of all users in selected chapter
+        $our_chapter_users = userids_in_chapter( $sent_selected_chapter );
+        error_log( '__METHOD__' . var_export( __METHOD__, true ) );
+        error_log( '__LINE__' . var_export( __LINE__, true ) );
+        error_log( '$our_chapter_users ' . var_export( $our_chapter_users, true ) );
+
+        $formatted_user_ids = implode( ', ' , $our_chapter_users );
+        error_log( '$formatted_user_ids ' . var_export( $formatted_user_ids, true ) );
+
+        $referrals_all = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM $table_name WHERE sender_id IN ( %s )",
+                $formatted_user_ids
+            ),
+            ARRAY_A
+        );
+        error_log( '$referrals_all ' . var_export( $referrals_all, true ) );
+    }
 
     // Filter referrals based on the date range
+    // $referrals_sent = array_filter($referrals_all, function ($referral) use ($start_date, $end_date, $sent_selected_chapter) {
     $referrals_sent = array_filter($referrals_all, function ($referral) use ($start_date, $end_date) {
-        $sent_date = date('Y-m-d', strtotime($referral['sent_date']));
+            $sent_date = date('Y-m-d', strtotime($referral['sent_date']));
         return ($sent_date >= $start_date && $sent_date <= $end_date);
     });
     return $referrals_sent;
@@ -195,10 +282,16 @@ function get_referrals_sent_by_date_range($start_date, $end_date)
  * @param string $end_date   The end date of the date range.
  * @return array             An array of referral data for received referrals within the date range.
  */
-function get_referrals_received_by_date_range($start_date, $end_date)
+function get_referrals_received_by_date_range($start_date, $end_date, $recv_selected_chapter)
+// function get_referrals_received_by_date_range($start_date, $end_date)
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'show_referrals';
+
+    error_log( '__FILE__' . var_export( __FILE__, true ) );
+    error_log( '__METHOD__' . var_export( __METHOD__, true ) );
+    error_log( '$recv_selected_chapter ' . var_export( $recv_selected_chapter, true ), 3, WP_DEBUG_LOG );
+
     $current_user_id = bp_displayed_user_id();
 
     $referrals_all = $wpdb->get_results(
@@ -210,6 +303,7 @@ function get_referrals_received_by_date_range($start_date, $end_date)
     );
 
     // Filter referrals based on the date range
+    // $referrals_received = array_filter($referrals_all, function ($referral) use ($start_date, $end_date, $recv_selected_chapter) {
     $referrals_received = array_filter($referrals_all, function ($referral) use ($start_date, $end_date) {
         $received_date = date('Y-m-d', strtotime($referral['received_date']));
         return ($received_date >= $start_date && $received_date <= $end_date);
@@ -238,18 +332,36 @@ function filter_referrals_ajax()
     $start_date_received = isset($_POST["start_date_received"]) ? sanitize_text_field($_POST["start_date_received"]) : '';
     $end_date_received = isset($_POST["end_date_received"]) ? sanitize_text_field($_POST["end_date_received"]) : '';
 
-    // Check if the sender and recipient have the role "Litiz"
+    // Check if the sender and recipient have the role "Litiz" - change to not hardcode lititz
     $sender_id = $_POST['sender_id'];
     $recipient_id = $_POST['recipient_id'];
 
-    $sender_role = bp_get_profile_field_data(array('field' => 11, 'user_id' => $sender_id));
-    $recipient_role = bp_get_profile_field_data(array('field' => 11, 'user_id' => $recipient_id));
+    // Get Selected Chapter from Manage Referrals filter form. This is only available for users with role = 'President'.
+    $sent_selected_chapter = isset($_POST["sent_selected_chapter"]) ? sanitize_text_field( $_POST['sent_selected_chapter']) : '';
+    $recv_selected_chapter = isset($_POST["recv_selected_chapter"]) ? sanitize_text_field( $_POST['recv_selected_chapter']) : '';
 
-    if ($sender_role === 'Lititz' && $recipient_role === 'Lititz') {
-        $referrals_sent = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent);
+    // Chapter affiliation for sender and receiver are referenced by field 11 'Chapter Member'
+    $sender_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $sender_id));
+    $recipient_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $recipient_id));
+    error_log( '__FILE__' . var_export( __FILE__, true ) );
+    error_log( '__METHOD__' . var_export( __METHOD__, true ) );
+    error_log( '__LINE__ ' . var_export( __LINE__, true ) );
+    error_log( '$sender_id ' . var_export( $sender_id, true ) );
+    error_log( '$recipient_id ' . var_export( $recipient_id, true ) );
+    error_log( '$sent_selected_chapter ' . var_export( $sent_selected_chapter, true ) );
+    error_log( '$recv_selected_chapter ' . var_export( $recv_selected_chapter, true ) );
+    error_log( '$sender_chapter ' . var_export( $sender_chapter, true ) );
+    error_log( '$recipient_chapter ' . var_export( $recipient_chapter, true ) );
 
+    // If the sender or the receiver of the referral is in the selected Chapter, process it. 
+    // if ( $sender_chapter === 'Lititz' && $recipient_chapter === 'Lititz'  ) {
+    if ( $sender_chapter === $sent_selected_chapter || $recipient_chapter === $recv_selected_chapter ) {
+        $referrals_sent     = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent, $sent_selected_chapter );
+        // $referrals_sent     = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent);
+        $referrals_received = get_referrals_received_by_date_range($start_date_received, $end_date_received, $recv_selected_chapter);
 
-        $referrals_received = get_referrals_received_by_date_range($start_date_received, $end_date_received);
+        error_log( '$referrals_sent ' . var_export( $referrals_sent, true ) );
+        error_log( '$referrals_received ' . var_export( $referrals_received, true ) );
 
         // Process sent referrals
         if (!empty($referrals_sent)) {
@@ -432,10 +544,13 @@ function filter_referrals_ajax()
         $response = ob_get_clean();
     } else {
         // If either the sender or recipient does not have the role "Litiz", return empty HTML
-        $sent_html = '<p>There are no referral sent data available based on the user role "Lititz".</p>';
+        // $sent_html = '<p>There are no referral sent data available based on the user role "Lititz".</p>';
+        $sent_html = '<p>There are no referral sent data available for ' . $sent_selected_chapter .'</p>';
 
-        $received_html = '<p>There are no referral received data available based on the user role "Lititz".</p>';
+        // $received_html = '<p>There are no referral received data available based on the user role "Lititz".</p>';
+        $received_html = '<p>There are no referral received data available for ' . $recv_selected_chapter . '</p>';
     }
     echo json_encode(array('sent' => $sent_html, 'received' => $received_html));
     wp_die();
 }
+
