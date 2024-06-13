@@ -422,8 +422,7 @@ if ( !function_exists('is_chapter_president') ) {
     $user_roles = $user_data->roles;
     // Determine if user role is a chapter president
     if (!empty($user_roles) && str_contains(implode(', ', $user_roles),'chapter_president') ) {
-      // echo 'Presidential material';
-            return true;
+      return true;
     }
     return false;
   }
@@ -437,11 +436,6 @@ if ( !function_exists('is_chapter_president') ) {
  */
 
  function userids_in_chapter( $selected_chapter ) {
-  error_log( '__FILE__' . var_export( __FILE__, true ) );
-  error_log( '__METHOD__' . var_export( __METHOD__, true ) );
-  error_log( '__LINE__ ' . var_export( __LINE__, true ) );
-  error_log( '$selected_chapter ' . var_export( $selected_chapter, true ) );
-
   $chapter_user_ids = [];
   // Retrieve all user ids
   $users = get_users( 'fields=ID' ); 
@@ -450,9 +444,9 @@ if ( !function_exists('is_chapter_president') ) {
     $user_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $user->ID));
     if ( $selected_chapter === $user_chapter ) {
       // Add user id to the list if their chapter is the one we are looking for
-      $chapter_user_ids[] = $user->ID; 
+      $chapter_user_ids[] = $user; 
     }
   }
-  error_log( '$chapter_user_ids ' . var_export( $chapter_user_ids, true ) );
-  return sort( $chapter_user_ids, SORT_NUMERIC ) ;
+  sort( $chapter_user_ids, SORT_NUMERIC ); 
+  return $chapter_user_ids;
 }
