@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2024-06-14
+
+### Changed
+
+- Adjusted variables used to determine receiving / sending chapters. 
+- Fixed logic to remove redundant entries
+- Changed output on referrals table to use sending name or receiving name as required. 
+- Removed debug code. 
+
 ## [1.1.0] - 2024-06-13
 
 ### Added
