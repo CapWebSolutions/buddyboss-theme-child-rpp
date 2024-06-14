@@ -441,7 +441,7 @@ if ( !function_exists('is_chapter_president') ) {
   $users = get_users( 'fields=ID' ); 
 
   foreach ($users as $user) {
-    $user_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $user->ID));
+    $user_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $user)); // returns alpha chapter. 
     if ( $selected_chapter === $user_chapter ) {
       // Add user id to the list if their chapter is the one we are looking for
       $chapter_user_ids[] = $user; 

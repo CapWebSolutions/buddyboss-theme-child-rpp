@@ -22,23 +22,23 @@ if (!function_exists('save_referral_data')) {
 
         // validation
         if (isset($_POST['formData'])) :
-            $name = (isset($_POST["ref-name"]) && $_POST["ref-name"] != '') ? $_POST["ref-name"] : false;
-            $phone = (isset($_POST["ref-phoneno"]) && $_POST["ref-phoneno"] != '') ? $_POST["ref-phoneno"] : false;
-            $email = (isset($_POST["ref-email"]) && $_POST["ref-email"] != '') ? $_POST["ref-email"] : false;
-            $message = (isset($_POST["ref-message"]) && $_POST["ref-message"] != '') ? $_POST["ref-message"] : false;
+            $name = (isset($_POST["ref_name"]) && $_POST["ref_name"] != '') ? $_POST["ref_name"] : false;
+            $phone = (isset($_POST["ref_phoneno"]) && $_POST["ref_phoneno"] != '') ? $_POST["ref_phoneno"] : false;
+            $email = (isset($_POST["ref_email"]) && $_POST["ref_email"] != '') ? $_POST["ref_email"] : false;
+            $message = (isset($_POST["ref_message"]) && $_POST["ref_message"] != '') ? $_POST["ref_message"] : false;
             $type_of_referral = isset($referral_data['type_of_referral']) ? $referral_data['type_of_referral'] : '';
 
             // Validate the fields
             $errors = array();
 
             if ($name) {
-                $errors["ref-name"] = "Referral’s Full Name is required";
+                $errors["ref_name"] = "Referral’s Full Name is required";
             } else if ($phone) {
-                $errors["ref-phoneno"] = "Referral’s Phone Number is required";
+                $errors["ref_namephoneno"] = "Referral’s Phone Number is required";
             } else if ($email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors["ref-email"] = "Valid Referral’s Email is required";
+                $errors["ref_nameemail"] = "Valid Referral’s Email is required";
             } else if ($message) {
-                $errors["ref-message"] = "Message is required";
+                $errors["ref_namemessage"] = "Message is required";
             } else if ($type_of_referral) {
                 $errors["type_of_referral"] = "Type of Referral is required";
             } else {
@@ -55,13 +55,6 @@ if (!function_exists('save_referral_data')) {
 
         // Get the current logged-in user ID
         $sender_id = get_current_user_id();
-        $sender_chapter = get_buddyboss_profile_data($sender_id);
-        var_dump($sender_chapter);
-
-        // Get the current DISPLAYED user's ID and chapter. This will be the recipient of the referral. 
-        $current_displayed_user_id = bp_displayed_user_id();
-        $displayed_user_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $current_displayed_user_id));
-        var_dump($displayed_user_chapter);
 
         // Insert data into custom table with sender and recipient ID
         $table_name = $wpdb->prefix . 'show_referrals';

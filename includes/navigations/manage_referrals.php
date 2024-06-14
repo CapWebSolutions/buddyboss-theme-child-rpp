@@ -325,29 +325,27 @@ function filter_referrals_ajax()
     $recipient_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $recipient_id));
 
     // If the sender or the receiver of the referral is in the selected Chapter, process it. 
-    // if ( $sender_chapter === 'Lititz' && $recipient_chapter === 'Lititz'  ) {
-    // if ( $sender_chapter === $sent_selected_chapter || $recipient_chapter === $recv_selected_chapter ) {
         $referrals_sent     = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent, $sent_selected_chapter );
-        // $referrals_sent     = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent);
         $referrals_received = get_referrals_received_by_date_range($start_date_received, $end_date_received, $recv_selected_chapter);
 
         // Process sent referrals
         if (!empty($referrals_sent)) {
-            $referral_table = [];
+            $referrals_sent_table = [];
+            $chapter_senders = [];
             foreach ($referrals_sent as $referral) {
                 
                 $referral_count = 0;
                 $sender_id = $referral['sender_id'];
+                $chapter_senders[] = $sender_id;
                 $sender_name = get_userdata($sender_id)->display_name ? get_userdata($sender_id)->display_name : get_userdata($sender_id)->user_login;
 
-                if (isset($referral_table[$referral['recipient_id']][$referral['type_of_referral']])) {
-                    $referral_count = $referral_table[$referral['recipient_id']][$referral['type_of_referral']] + 1;
+                if (isset($referrals_sent_table[$referral['sender_id']][$referral['type_of_referral']])) {
+                    $referral_count = $referrals_sent_table[$referral['sender_id']][$referral['type_of_referral']] + 1;
                 } else {
                     $referral_count = 1;
                 }
-               
-                $referral_table[$referral['recipient_id']]['name'] =  $sender_name;
-                $referral_table[$referral['recipient_id']][$referral['type_of_referral']] = $referral_count;
+                $referrals_sent_table[$referral['sender_id']]['name'] =  $sender_name;
+                $referrals_sent_table[$referral['sender_id']][$referral['type_of_referral']] = $referral_count;
             }
         }
 
@@ -357,17 +355,17 @@ function filter_referrals_ajax()
             foreach ($referrals_received as $referral) {
 
                 $referral_count = 0;
-                $recipient_id = $referral['sender_id'];
+                $recipient_id = $referral['recipient_id'];
                 $recipient_name = get_userdata($recipient_id)->display_name ? get_userdata($recipient_id)->display_name : get_userdata($recipient_id)->user_login;
 
-                if (isset($referrals_received_table[$referral['sender_id']][$referral['type_of_referral']])) {
-                    $referral_count = $referrals_received_table[$referral['sender_id']][$referral['type_of_referral']] + 1;
+                if (isset($referrals_received_table[$referral['recipient_id']][$referral['type_of_referral']])) {
+                    $referral_count = $referrals_received_table[$referral['recipient_id']][$referral['type_of_referral']] + 1;
                 } else {
                     $referral_count = 1;
                 }
 
-                $referrals_received_table[$referral['sender_id']]['name'] = $recipient_name;
-                $referrals_received_table[$referral['sender_id']][$referral['type_of_referral']] = $referral_count;
+                $referrals_received_table[$referral['recipient_id']]['name'] = $recipient_name;
+                $referrals_received_table[$referral['recipient_id']][$referral['type_of_referral']] = $referral_count;
             }
         }
 
@@ -386,11 +384,10 @@ function filter_referrals_ajax()
             </thead>
             <tbody>
                 <?php
-                if (!empty($referral_table)) :
+                if (!empty($referrals_sent_table)) :
                     $count_referral = $count_networking = $count_payments = 0;
-                    foreach ($referral_table as $key => $referral) :
+                    foreach ($referrals_sent_table as $key => $referral) :
                         
-
                         $type_referral = $type_networking = $type_payments = 0;
 
                         $type_referral = isset($referral['Referral']) ? $type_referral + $referral['Referral'] : $type_referral;
@@ -440,7 +437,7 @@ function filter_referrals_ajax()
         <?php
         $sent_html = ob_get_clean();
 
-        // Generate HTML for sent referrals
+        // Generate HTML for received referrals
         ob_start();
         ?>
         <table>
