@@ -158,11 +158,6 @@ if (!function_exists('custom_manage_referral_nav_content')) {
                         },
                         success: function(response) {
                             $('#referral-sent-content').html(response.sent);
-                            console.log(response);
-                        },
-                        error: function(response, status, exception) {
-                            console.log( response, status );
-                            alert('Exception:', exception);
                         }
                     })
                 });
@@ -224,12 +219,24 @@ function get_referrals_sent_by_date_range($start_date, $end_date, $sent_selected
         // Processing filter for provided chapter
         // Get list of all users in selected chapter
         $our_chapter_users = userids_in_chapter( $sent_selected_chapter );
-        $formatted_user_ids = implode( ', ' , $our_chapter_users );
+        // $formatted_user_ids = implode( ', ' , $our_chapter_users );
+        // $referrals_all = $wpdb->get_results(
+        //     $wpdb->prepare(
+        //         "SELECT * FROM $table_name WHERE sender_id IN ( %s )",
+        //         $formatted_user_ids
+        //     ),
+        //     ARRAY_A
+        // );
+
+        // Build SQL statement to retrieve all referrals with sender is in our chapter
+        $where = 'WHERE sender_id IN ( ';
+        for ($i=0; $i < count($our_chapter_users); $i++) { 
+            $where .= $our_chapter_users[$i]. ', ';
+        }
+        $where = substr( $where, 0, -2 );
+        $where .= ' )';
         $referrals_all = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM $table_name WHERE sender_id IN ( %s )",
-                $formatted_user_ids
-            ),
+            $wpdb->prepare( "SELECT * FROM $table_name $where" ),
             ARRAY_A
         );
     }
@@ -269,14 +276,30 @@ function get_referrals_received_by_date_range($start_date, $end_date, $recv_sele
     } else {
         // Get list of all users in selected chapter
         $our_chapter_users = userids_in_chapter( $recv_selected_chapter );
-        $formatted_user_ids = implode( ', ' , $our_chapter_users );
+        // $formatted_user_ids = implode( ', ' , $our_chapter_users );
+        // $referrals_all = $wpdb->get_results(
+        //     $wpdb->prepare(
+        //         "SELECT * FROM $table_name WHERE recipient_id IN ( %s )",
+        //         $formatted_user_ids
+        //     ),
+        //     ARRAY_A
+        // );
+
+        // Build SQL statement to retrieve all referrals with sender is in our chapter
+        $where = 'WHERE recipient_id IN ( ';
+        
+        for ($i=0; $i < count($our_chapter_users); $i++) { 
+            $where .= $our_chapter_users[$i]. ', ';
+        }
+        $where = substr( $where, 0, -2 );
+        $where .= ' )';
         $referrals_all = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM $table_name WHERE recipient_id IN ( %s )",
-                $formatted_user_ids
-            ),
+            $wpdb->prepare( "SELECT * FROM $table_name $where" ),
             ARRAY_A
         );
+
+
+
     }
 
     // Filter referrals based on the date range
@@ -297,8 +320,7 @@ add_action('wp_ajax_nopriv_filter_referrals', 'filter_referrals_ajax');
 
 function filter_referrals_ajax()
 {
-    $sent_html = '';
-    $received_html = '';
+    $sent_html = $received_html = '';
 
     // referral sent date
     $start_date_sent = isset($_POST["start_date_sent"]) ? sanitize_text_field($_POST["start_date_sent"]) : '';
@@ -308,21 +330,10 @@ function filter_referrals_ajax()
     $start_date_received = isset($_POST["start_date_received"]) ? sanitize_text_field($_POST["start_date_received"]) : '';
     $end_date_received = isset($_POST["end_date_received"]) ? sanitize_text_field($_POST["end_date_received"]) : '';
 
-    // Check if the sender and recipient have the role "Litiz" - change to not hardcode lititz
-    $sender_id = $_POST['sender_id'];
-    $recipient_id = $_POST['recipient_id'];
-
     // Get Selected Chapter from Manage Referrals filter form. This is only available for users with role = 'President'.
-    // The selected chapter, for Sent or Received, returns counts only associated with members of THAT chapter. 
-    // Sent selected chapter will return referrals sent by members of the chapter, regardless of recipeint. 
-    // Received selected chapter will return referrals received by members of that chapter, regardless of sending source. 
 
     $sent_selected_chapter = isset($_POST["sent_selected_chapter"]) ? sanitize_text_field( $_POST['sent_selected_chapter']) : '';
     $recv_selected_chapter = isset($_POST["recv_selected_chapter"]) ? sanitize_text_field( $_POST['recv_selected_chapter']) : '';
-
-    // Chapter affiliation for sender and receiver are referenced by field 11 'Chapter Member'
-    $sender_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $sender_id));
-    $recipient_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $recipient_id));
 
     // If the sender or the receiver of the referral is in the selected Chapter, process it. 
         $referrals_sent     = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent, $sent_selected_chapter );
@@ -331,12 +342,10 @@ function filter_referrals_ajax()
         // Process sent referrals
         if (!empty($referrals_sent)) {
             $referrals_sent_table = [];
-            $chapter_senders = [];
             foreach ($referrals_sent as $referral) {
                 
                 $referral_count = 0;
                 $sender_id = $referral['sender_id'];
-                $chapter_senders[] = $sender_id;
                 $sender_name = get_userdata($sender_id)->display_name ? get_userdata($sender_id)->display_name : get_userdata($sender_id)->user_login;
 
                 if (isset($referrals_sent_table[$referral['sender_id']][$referral['type_of_referral']])) {
@@ -347,27 +356,7 @@ function filter_referrals_ajax()
                 $referrals_sent_table[$referral['sender_id']]['name'] =  $sender_name;
                 $referrals_sent_table[$referral['sender_id']][$referral['type_of_referral']] = $referral_count;
             }
-        }
-
-        // Process received referrals
-        $referrals_received_table = [];
-        if (!empty($referrals_received)) {
-            foreach ($referrals_received as $referral) {
-
-                $referral_count = 0;
-                $recipient_id = $referral['recipient_id'];
-                $recipient_name = get_userdata($recipient_id)->display_name ? get_userdata($recipient_id)->display_name : get_userdata($recipient_id)->user_login;
-
-                if (isset($referrals_received_table[$referral['recipient_id']][$referral['type_of_referral']])) {
-                    $referral_count = $referrals_received_table[$referral['recipient_id']][$referral['type_of_referral']] + 1;
-                } else {
-                    $referral_count = 1;
-                }
-
-                $referrals_received_table[$referral['recipient_id']]['name'] = $recipient_name;
-                $referrals_received_table[$referral['recipient_id']][$referral['type_of_referral']] = $referral_count;
-            }
-        }
+        }  
 
         // Generate HTML for sent referrals
         ob_start();
@@ -437,8 +426,28 @@ function filter_referrals_ajax()
         <?php
         $sent_html = ob_get_clean();
 
-        // Generate HTML for received referrals
-        ob_start();
+
+        // Process received referrals
+        if (!empty($referrals_received)) {
+            $referrals_received_table = [];
+            foreach ($referrals_received as $referral) {
+
+                $referral_count = 0;
+                $recipient_id = $referral['recipient_id'];
+                $recipient_name = get_userdata($recipient_id)->display_name ? get_userdata($recipient_id)->display_name : get_userdata($recipient_id)->user_login;
+
+                if (isset($referrals_received_table[$referral['recipient_id']][$referral['type_of_referral']])) {
+                    $referral_count = $referrals_received_table[$referral['recipient_id']][$referral['type_of_referral']] + 1;
+                } else {
+                    $referral_count = 1;
+                }
+
+                $referrals_received_table[$referral['recipient_id']]['name'] = $recipient_name;
+                $referrals_received_table[$referral['recipient_id']][$referral['type_of_referral']] = $referral_count;
+            }
+        } 
+        
+        ob_start(); // Generate HTML for received referrals
         ?>
         <table>
             <thead>
@@ -505,10 +514,9 @@ function filter_referrals_ajax()
 <?php
         $received_html = ob_get_clean();
 
-        $response = ob_get_clean();
     if ( empty($referrals_received) && empty($referrals_sent) ) {
-        $sent_html = '<p>There is no <strong>sent</strong> referral data available for ' . $sent_selected_chapter .' in the selected period.</p>';
-        $received_html = '<p>There is no <strong>received</strong> referral data available for ' . $recv_selected_chapter . ' in the selected period.</p>';
+        $sent_html = '<p>There is no <strong>sent</strong> referral data available for <strong>' . $sent_selected_chapter .'</strong> in the selected period.</p>';
+        $received_html = '<p>There is no <strong>received</strong> referral data available for <strong>' . $recv_selected_chapter . '</strong> in the selected period.</p>';
     }
     echo json_encode(array('sent' => $sent_html, 'received' => $received_html));
     wp_die();

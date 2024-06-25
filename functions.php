@@ -448,5 +448,6 @@ if ( !function_exists('is_chapter_president') ) {
     }
   }
   sort( $chapter_user_ids, SORT_NUMERIC ); 
+  
   return $chapter_user_ids;
 }
