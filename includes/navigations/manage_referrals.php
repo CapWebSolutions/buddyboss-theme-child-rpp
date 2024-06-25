@@ -28,10 +28,8 @@ if (!function_exists('custom_manage_referral_nav_content')) {
 
         // Retrieve referral sent data if form is submitted for Referral Sent
         if (isset($_POST["submit_sent"])) {
-            var_dump($start_date_sent, $end_date_sent);
             $none_specified = NULL;
             $referrals_sent = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent, $none_specified );
-            var_dump($referrals_sent);
         }
 
         // Retrieve referral received data if form is submitted for Referral Received
