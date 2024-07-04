@@ -328,11 +328,16 @@ function filter_referrals_ajax()
     $start_date_received = isset($_POST["start_date_received"]) ? sanitize_text_field($_POST["start_date_received"]) : '';
     $end_date_received = isset($_POST["end_date_received"]) ? sanitize_text_field($_POST["end_date_received"]) : '';
 
+    $sender_id = $_POST['sender_id'];
+    $recipient_id = $_POST['recipient_id'];
     // Get Selected Chapter from Manage Referrals filter form. This is only available for users with role = 'President'.
 
     $sent_selected_chapter = isset($_POST["sent_selected_chapter"]) ? sanitize_text_field( $_POST['sent_selected_chapter']) : '';
     $recv_selected_chapter = isset($_POST["recv_selected_chapter"]) ? sanitize_text_field( $_POST['recv_selected_chapter']) : '';
 
+    // Chapter affiliation for sender and receiver are referenced by field 11 'Chapter Member'
+    $sender_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $sender_id));
+    $recipient_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $recipient_id));
     // If the sender or the receiver of the referral is in the selected Chapter, process it. 
         $referrals_sent     = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent, $sent_selected_chapter );
         $referrals_received = get_referrals_received_by_date_range($start_date_received, $end_date_received, $recv_selected_chapter);

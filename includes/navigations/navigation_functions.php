@@ -8,8 +8,6 @@ if (!function_exists('custom_add_referrals_nav')) {
     function custom_add_referrals_nav()
     {
         if (is_user_logged_in() && ( ( bp_displayed_user_id() == get_current_user_id() ) || is_chapter_president() ) ) {
-
-        // if (is_user_logged_in() && bp_displayed_user_id() == get_current_user_id()) {
             global $bp, $wpdb;
 
             $unseen_referrals_count = get_unseen_referrals_count();
@@ -39,7 +37,6 @@ if (!function_exists('custom_add_referrals_nav')) {
             );
 
             // Manage Referrals - only available for users with role=chapter_president
-            // if ($chapter_role === 'Lititz') {
             if ( is_chapter_president() ) {
                 bp_core_new_nav_item(
                     array(
@@ -107,7 +104,6 @@ if (!function_exists('custom_manage_referral_nav_screen')) {
 if (!function_exists('custom_manage_member_nav_screen')) {
     function custom_manage_member_nav_screen()
     {
-        // if (is_user_logged_in() && bp_displayed_user_id() == get_current_user_id()) {
         if (is_user_logged_in() && ( ( bp_displayed_user_id() == get_current_user_id() ) || is_chapter_president() ) ) {
             add_action('bp_template_content', 'custom_manage_member_nav_content');
             bp_core_load_template(apply_filters('bp_core_template_plugin', 'members/single/plugins'));
