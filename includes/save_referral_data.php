@@ -34,11 +34,11 @@ if (!function_exists('save_referral_data')) {
             if ($name) {
                 $errors["ref_name"] = "Referral’s Full Name is required";
             } else if ($phone) {
-                $errors["ref_namephoneno"] = "Referral’s Phone Number is required";
+                $errors["ref_phoneno"] = "Referral’s Phone Number is required";
             } else if ($email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors["ref_nameemail"] = "Valid Referral’s Email is required";
+                $errors["ref_email"] = "Valid Referral’s Email is required";
             } else if ($message) {
-                $errors["ref_namemessage"] = "Message is required";
+                $errors["ref_message"] = "Message is required";
             } else if ($type_of_referral) {
                 $errors["type_of_referral"] = "Type of Referral is required";
             } else {

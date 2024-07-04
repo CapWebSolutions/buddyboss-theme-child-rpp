@@ -451,3 +451,17 @@ if ( !function_exists('is_chapter_president') ) {
   
   return $chapter_user_ids;
 }
+function bb_custom_head() { 
+  ?>      
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC8GSN0FFC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DC8GSN0FFC');
+  </script>  
+  <?php
+}
+
+add_action('wp_head', 'bb_custom_head');
