@@ -24,10 +24,10 @@
 
       // Gather form data
       var formData = {
-        ref_name: $("#name").val(),
-        ref_email: $("#email").val(),
-        ref_phoneno: $("#phoneno").val(),
-        ref_message: $("#message").val(),
+        ref-name: $("#name").val(),
+        ref-email: $("#email").val(),
+        ref-phoneno: $("#phoneno").val(),
+        ref-message: $("#message").val(),
         ref_recipient_id: $("#recipient_id").val(),
         type_of_referral: $("#type_of_referral").val(),
       };

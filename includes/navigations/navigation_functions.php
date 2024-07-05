@@ -11,6 +11,8 @@ if (!function_exists('custom_add_referrals_nav')) {
             global $bp, $wpdb;
 
             $unseen_referrals_count = get_unseen_referrals_count();
+            $user_id = bp_displayed_user_id();
+            $chapter_role  = bp_get_profile_field_data(array('field' => 11, 'user_id' => $user_id));
 
             // Referrals
             bp_core_new_nav_item(
@@ -246,11 +248,11 @@ if (!function_exists('generate_referral_html')) {
 
                                             $date_sent = date('F j, Y', strtotime($referral['sent_date']));
 
-                                            $referral_name = $referral['ref_name'];
-                                            $full_message = ($referral['ref_message'] !== null) ? ltrim($referral['ref_message']) : null;
+                                            $referral_name = $referral['ref-name'];
+                                            $full_message = ($referral['ref-message'] !== null) ? ltrim($referral['ref-message']) : null;
 
-                                            $phone_number = $referral['ref_phoneno'];
-                                            $email_address = $referral['ref_email'];
+                                            $phone_number = $referral['ref-phoneno'];
+                                            $email_address = $referral['ref-email'];
 
                                             $label = $is_my_referral_history ? 'Referral Sent' : 'Referral Received';
 

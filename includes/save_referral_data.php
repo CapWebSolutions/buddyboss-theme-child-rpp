@@ -22,23 +22,23 @@ if (!function_exists('save_referral_data')) {
 
         // validation
         if (isset($_POST['formData'])) :
-            $name = (isset($_POST["ref_name"]) && $_POST["ref_name"] != '') ? $_POST["ref_name"] : false;
-            $phone = (isset($_POST["ref_phoneno"]) && $_POST["ref_phoneno"] != '') ? $_POST["ref_phoneno"] : false;
-            $email = (isset($_POST["ref_email"]) && $_POST["ref_email"] != '') ? $_POST["ref_email"] : false;
-            $message = (isset($_POST["ref_message"]) && $_POST["ref_message"] != '') ? $_POST["ref_message"] : false;
+            $name = (isset($_POST["ref-name"]) && $_POST["ref-name"] != '') ? $_POST["ref-name"] : false;
+            $phone = (isset($_POST["ref-phoneno"]) && $_POST["ref-phoneno"] != '') ? $_POST["ref-phoneno"] : false;
+            $email = (isset($_POST["ref-email"]) && $_POST["ref-email"] != '') ? $_POST["ref-email"] : false;
+            $message = (isset($_POST["ref-message"]) && $_POST["ref-message"] != '') ? $_POST["ref-message"] : false;
             $type_of_referral = isset($referral_data['type_of_referral']) ? $referral_data['type_of_referral'] : '';
 
             // Validate the fields
             $errors = array();
 
             if ($name) {
-                $errors["ref_name"] = "Referral’s Full Name is required";
+                $errors["ref-name"] = "Referral’s Full Name is required";
             } else if ($phone) {
-                $errors["ref_phoneno"] = "Referral’s Phone Number is required";
+                $errors["ref-phoneno"] = "Referral’s Phone Number is required";
             } else if ($email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors["ref_email"] = "Valid Referral’s Email is required";
+                $errors["ref-email"] = "Valid Referral’s Email is required";
             } else if ($message) {
-                $errors["ref_message"] = "Message is required";
+                $errors["ref-message"] = "Message is required";
             } else if ($type_of_referral) {
                 $errors["type_of_referral"] = "Type of Referral is required";
             } else {
@@ -62,10 +62,10 @@ if (!function_exists('save_referral_data')) {
         $wpdb->insert(
             $table_name,
             array(
-                'ref_name' => $referral_data['ref_name'],
-                'ref_email' => $referral_data['ref_email'],
-                'ref_phoneno' => $referral_data['ref_phoneno'],
-                'ref_message' => $referral_data['ref_message'],
+                'ref-name' => $referral_data['ref-name'],
+                'ref-email' => $referral_data['ref-email'],
+                'ref-phoneno' => $referral_data['ref-phoneno'],
+                'ref-message' => $referral_data['ref-message'],
                 'type_of_referral' => $referral_data['type_of_referral'],
                 'sender_id' => $sender_id,
                 'recipient_id' => $referral_data['ref_recipient_id'],
