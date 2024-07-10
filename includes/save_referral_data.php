@@ -75,8 +75,8 @@ if (!function_exists('save_referral_data')) {
             array('%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s')
         );
 
-
-
+        // send notification of referral
+        custom_referrals_notification( $referral_data['ref_recipient_id'] );
 
         // Return a JSON response with the success message
         wp_send_json_success('Referral sent successfully.');
