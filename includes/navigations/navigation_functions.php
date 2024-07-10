@@ -65,7 +65,7 @@ if (!function_exists('custom_referrals_nav_screen')) {
 
             update_referral_seen_status();
 
-            // add_action('bp_template_content', 'custom_referrals_nav_content');
+            add_action('bp_template_content', 'custom_referrals_nav_content');
             bp_core_load_template(apply_filters('bp_core_template_plugin', 'members/single/plugins'));
         }
     }
@@ -141,26 +141,7 @@ if (!function_exists('custom_referrals_nav_content')) {
 
         if (isset($_POST['email_notifications_toggle'])) {
             $email_notifications_toggle = sanitize_text_field($_POST['email_notifications_toggle']);
-
             update_user_meta(get_current_user_id(), 'referral_email_notifications', $email_notifications_toggle);
-
-            // if ($email_notifications_toggle == 'on') {
-            //     $subject = 'New Referral Received';
-            //     $message = 'You have received a new referral. Log in to check it out!';
-            //     $headers = array('Content-Type: text/html; charset=UTF-8');
-            //     $headers[] .= 'bcc: info@capwebsolutions.com';
-
-            //     $sender_id = $_POST['sender_id'];
-            //     // $email_sent = wp_mail(get_userdata($sender_id)->user_email, $subject, $message, $headers);
-            //     $email_sent = wp_mail(get_userdata(get_current_user_id())->user_email, $subject, $message, $headers);
-            //     /// get_userdata(get_current_user_id())->user_email   This is the em of the sending person!!!!
-
-            //     if ($email_sent) {
-            //         echo 'Email sent successfully.';
-            //     } else {
-            //         echo 'Error sending email.';
-            //     }
-            // }
         }
     }
 }
@@ -203,7 +184,6 @@ if (!function_exists('generate_referral_html')) {
             $is_my_referral_history = bp_is_current_component('my-referral-history');
 
             $email_notifications_toggle = get_user_meta(get_current_user_id(), 'referral_email_notifications', true);
-            if ( WP_DEBUG ) $email_notifications_toggle = 'on';   // Debug force to true
 
         ?>
             <div id="item-body" class="item-body">
@@ -364,13 +344,9 @@ if (!function_exists('generate_referral_html')) {
 if (!function_exists('custom_referrals_notification')) {
     function custom_referrals_notification( $referral_recipient_id )
     {
-        error_log( '$referral_recipient_id ' . var_export( $referral_recipient_id, true ) );
-        if ( WP_DEBUG ) $toggle_status = 'on';   // Debug force to true
 
-        // if (isset($_POST['email_notifications_toggle'])) {
+        if (isset($_POST['email_notifications_toggle'])) {
             $email_notifications_toggle = sanitize_text_field($_POST['email_notifications_toggle']);
-            if ( WP_DEBUG )  $email_notifications_toggle = 'on';   // Debug force to true
-
 
             if ($email_notifications_toggle == 'on') {
                 $subject = 'New Referral Received';
@@ -381,8 +357,6 @@ if (!function_exists('custom_referrals_notification')) {
                 $user_info = get_userdata( $referral_recipient_id );
                 $to_email = $user_info->user_email;
                 $email_sent = wp_mail( $to_email, $subject, $message, $headers);
-                // $email_sent = wp_mail(get_userdata(get_current_user_id())->user_email, $subject, $message, $headers);
-                /// get_userdata(get_current_user_id())->user_email   This is the em of the sending person!!!!
 
                 if ($email_sent) {
                     echo 'Email sent successfully.';
@@ -390,6 +364,6 @@ if (!function_exists('custom_referrals_notification')) {
                     echo 'Error sending email.';
                 }
             }
-        // }
+        }
     }
 }

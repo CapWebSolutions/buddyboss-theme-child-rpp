@@ -117,7 +117,7 @@ function load_include_files(){
 
 
 /**
- * fuction to show table data
+ * function to show table data
  */
 add_action('wp_footer', 'check_table_existence');
 
