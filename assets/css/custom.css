@@ -8,3 +8,432 @@ Make sure to respect the media queries! Otherwise you may
 accidentally add desktop styles to the mobile layout.
 https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 --------------------------------------------------------------*/
+
+/*----Send Referral Form----*/
+#referral-form label{
+	margin-top: 20px;
+}  
+#referral-form .error-message{
+	color: red;
+}
+#referral-form textarea{
+	margin-bottom: 0;
+}
+#referral-form #send-referral{
+	margin-top: 30px;
+}
+
+#item-header-content .alert.alert-success{
+	font-size: 16px;
+    padding: 6px 20px;
+    background: #e7f7e7;
+    display: inline-block;
+    color: #008b00;
+    margin-top: 10px;
+    border-radius: 40px;
+}
+
+/*---Referral List----*/
+.profile.public .bp-widget.profile{
+	padding: 0;
+}
+.referral-list .referral-entry{
+	padding-bottom: 30px;
+	position: relative;
+    background: #f9f9f9;
+    padding: 20px;
+    position: relative;
+}
+.referral-list .referral-entry:nth-child(even){
+	background: #fff;
+}
+.referral-list .referral-entry:last-child{
+	border-bottom: unset;
+	margin-bottom: 30px;
+}
+.referral-list .referral-entry .referral-entry-top{
+	display: flex;
+	column-gap: 60px;
+}
+.referral-list .referral-entry .referral-entry-top .referral-label{
+	font-weight: 700;
+}
+.referral-list .referral-entry .referral-entry-body{
+	display: flex;
+	column-gap: 65px;
+	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 1px solid rgba(0, 0, 0, 0.08);
+	align-items: flex-start;
+	position: relative;
+}
+.referral-list .referral-entry .referral-entry-body .user-img{
+	display: flex;
+	flex-direction: column-reverse;
+	text-align: center;
+	row-gap: 20px;
+	flex-shrink: 0;
+}
+.referral-list .referral-entry .referral-entry-body .user-img img{
+	width: 80px;
+	height: 80px;
+	border-radius: 150px;
+	object-fit: cover;
+}
+.referral-list .referral-entry .referral-entry-body .user-img a{
+	color: #000;
+	font-weight: 700;
+}
+
+.referral-list .referral-entry .referral-entry-body .message{
+	padding: 0;
+	margin: 10px 0;
+	background: transparent;
+}
+.referral-list .referral-entry .referral-entry-body .delete-option{
+	position: absolute;
+	top: 20px;
+	right: 0;
+}
+
+.referral-list .referral-entry .referral-entry-body .delete-option button{
+	padding: 6px 20px;
+}
+
+/*---Display Eef Status----*/
+.display_ref_status{
+	margin-top: 10px;
+}
+.display_ref_status > span{
+	padding: 8px 10px 8px 20px;
+    background: #f5f5f5;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    column-gap: 8px;
+    margin-bottom: 6px;
+}
+.display_ref_status span.ref_month{
+	margin: 0 12px 6px;
+}
+.display_ref_status span .number{
+	font-weight: 700;
+	color: #000;
+	width: 22px;
+    height: 22px;
+    background: #dbdbdb;
+    border-radius: 25px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/*----Email Notification----*/
+.group-separator-block header.profile-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.email-notifications-toggle{
+	display: flex;
+	align-items: center;
+	column-gap: 10px;
+}
+.email-notifications-toggle label{
+	margin-bottom: 0;
+	font-size: 15px;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 22px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    width: 44px;
+    border-radius: 40px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    border-radius: 20px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #298d00;
+}
+
+input:checked + .slider:before {
+    transform: translateX(21px);
+}
+
+.switch_on, .switch_off {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    color: white;
+}
+
+.switch_off {
+    display: none;
+}
+
+input:checked + .slider + .switch_on {
+    display: block;
+}
+
+input:checked + .slider + .switch_off {
+    display: none;
+}
+
+
+.members-table .user-img img{
+	width: 52px;
+	height: 52px;
+	border-radius: 52px;
+	object-fit: cover;
+}
+table.members-table {
+	border: unset;
+	font-size: 15px;
+}
+.members-table tr th{
+	border-bottom: 1px solid #666 !important;
+	margin: 5px auto !important;
+}
+.members-table tr td{
+	vertical-align: middle;
+	margin: 5px auto !important;
+}
+.members-table .button{
+	white-space: nowrap;
+}
+
+.new-member-list .bb-members-list__item{
+	flex-wrap: wrap;
+	align-items: start;
+	column-gap: 10px;
+	row-gap: 10px;
+	padding-bottom: 30px;
+	margin-bottom: 30px !important;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+	align-items: center;
+}
+.new-member-list .bb-members-list .bb-members-list__item:last-child{
+	border-bottom: unset;
+}
+.new-member-list .bb-members-list__item .bb-members-list__avatar{
+	margin-right: 10px !important;
+}
+.new-member-list .bb-members-list__item .bb-members-list__avatar img{
+	width: 50px;
+	height: 50px;
+	object-fit: cover;
+}
+.new-member-list .bb-members-list__item .extra-member-info{
+	width: 100%;
+	display: flex;
+	column-gap: 15px;
+	align-items: center;
+	margin-left: 75px;
+	align-items: start;
+}
+.new-member-list .bb-members-list__item .extra-member-info p{
+	margin-bottom: 0;
+	width: 33.33%;
+}
+.new-member-list .bb-members-list__item .extra-member-info span{
+	font-weight: 700;
+}
+.new-member-list .bb-members-list__item .bb-members-list__name a{
+	font-size: 22px;
+	text-transform: capitalize;
+}
+#type_of_referral{
+	width:100%;
+}
+.referral-entry-top .type-of-referral{
+	color: #000;
+    margin-left: auto;
+}
+.bb-members.new-member-list{
+	margin-bottom: 60px;
+}
+.bb-members.new-member-list .bb-members-list{
+	display: block !important;
+}
+.referrals-sent-table,
+.referrals-received-table{
+	margin-bottom: 20px;
+}
+.referrals-sent-table .ref-date,
+.referrals-received-table .ref-date{
+	display: flex;
+	column-gap: 20px;
+	align-items: center;
+	margin-bottom: 20px;
+}
+.referrals-sent-table .date-text,
+.referrals-received-table .date-text{
+	font-weight: 600;
+}
+.referrals-sent-table table,
+.referrals-received-table table{
+	background: #fff;
+}
+.referrals-sent-table table tr td,
+.referrals-received-table table tr td{
+	border-color: rgba(0,0,0,0.04) !important;
+}
+.referrals-sent-table table tr.lst-row td,
+.referrals-received-table table tr.lst-row td{
+	border-color: #E7E9EC !important;
+	font-weight: 600;
+}
+.referrals-sent-table .ref-date form,
+.referrals-received-table .ref-date form{
+	margin-bottom: 0 !important;
+	display: flex;
+	column-gap: 10px;
+	align-items: center;
+}
+.referrals-sent-table .ref-date form input[type="submit"],
+.referrals-received-table .ref-date form input[type="submit"]{
+	padding: 0 35px !important;
+}
+.manage-current-members table tr th:last-child,
+.manage-current-members table tr td:last-child{
+	text-align: right;
+}
+.manage-current-members table tr select{
+	width: 100%;
+}
+.deactivat-member-popup header,
+.change-chapter-popup header{
+	flex-wrap: wrap;
+	column-gap: 20px;
+	row-gap: 15px;
+	justify-content: center;
+	padding: 40px 30px;
+}
+.deactivat-member-popup h4,
+.deactivat-member-popup span,
+.change-chapter-popup h4,
+.change-chapter-popup span{
+	width: 100%;
+	text-align: center ;
+}
+.deactivat-member-popup button,
+.change-chapter-popup button{
+	margin: unset !important;
+}
+.members-btn{
+	text-align: right;
+}
+
+.referrals-sent-table table tr td:nth-of-type(1),
+.referrals-received-table table tr td:nth-of-type(1){
+	width: 40%;
+}
+
+
+@media(max-width:1024px){
+	.responsive-table{
+		overflow-x: scroll;
+	}
+
+}
+@media(max-width:768px){
+	.extra-member-info{
+		flex-direction: column;
+		row-gap: 5px;
+	}
+	.extra-member-info p{
+		width: 100% !important;
+	}
+	.bb-members.new-member-list{
+		margin-bottom: 30px;
+	}
+
+	.referrals-sent-table .ref-date, 
+	.referrals-received-table .ref-date{
+		flex-wrap: wrap;
+		row-gap: 10px;
+	}
+	.referrals-sent-table .ref-date form, 
+	.referrals-received-table .ref-date form{
+		column-gap: 4px;
+		row-gap: 10px;
+		flex-wrap: wrap;
+
+	}
+	.manage-current-members table tr select{
+		width: 200px;
+	}
+}
+@media(max-width:600px){
+	.referral-list .referral-entry .referral-entry-top{
+		justify-content: space-between;
+	}
+	.referral-list .referral-entry .referral-entry-body{
+		flex-direction: column;
+    	align-items: center;
+    	row-gap: 10px;
+	}
+	.referral-list .referral-entry .referral-entry-body .user-details{
+		text-align: center;
+		width: 100%;
+	}
+	.referral-list .referral-entry .referral-entry-body .delete-option{
+		position: unset;
+	}
+
+	.new-member-list .bb-members-list__item{
+		align-items: start;
+		flex-direction: column;
+	}
+	.new-member-list .bb-members-list__item .extra-member-info{
+		margin-left: 0;
+	}
+	.new-member-list .bb-members-list__item .bb-members-list__name a{
+		font-size: 18px;
+		margin-top: 5px;
+	}
+	.referral-list .referral-entry .referral-entry-top{
+		flex-wrap: wrap;
+	}
+}
+
+
+@media(max-width:375px){
+	.group-separator-block header.profile-header{
+		flex-direction: column;
+	}
+}
+
+/*19-04 popup*/
+
+

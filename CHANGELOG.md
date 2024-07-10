@@ -5,11 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.5] - 2024-07-10
+
+### Added
+
+- Moved all custom css out of the customizer and into the assets/css/custom.css file
+- Added automated version constant define based on style.css setting. Eliminaes need to set twice. 
+
 ## [1.1.4] - 2024-07-09
 
 ### Changed
 
 - Revert to original key names. 
+- Added function to handle email notifications. 
+- Added debuging code to turn off use of email toggle notification. Requires WP_DEBUG to be true. 
 
 ## [1.1.3] - 2024-07-04
 

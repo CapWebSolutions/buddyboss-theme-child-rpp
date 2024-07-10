@@ -14,7 +14,10 @@ if (!defined('ABSPATH')) {
 
 if (!defined('_S_VERSION')) {
   // Replace the version number of the theme on each release.
-  define('_S_VERSION', '1.1.4');
+  if( ! function_exists('get_plugin_data') ){
+    require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+  }
+  define('_S_VERSION', get_plugin_data(__FILE__ )['Version'] );
 }
 
 /**
