@@ -36,24 +36,6 @@ if (!function_exists('custom_manage_referral_nav_content')) {
         if (isset($_POST["submit_received"])) {
             $referrals_received = get_referrals_received_by_date_range($start_date_received, $end_date_received);
         }
-
-        // Get the current user's ID and role
-        // $current_user_id = get_current_user_id();
-        // $current_user_role = bp_get_profile_field_data(array('field' => 11, 'user_id' => $current_user_id));
-
-        // // Fetch all users with the same role as the current user
-        // $args = array(
-        //     'meta_query' => array(
-        //         array(
-        //             'key' => 'Your_custom_role_field_key', // Replace with the actual meta key for user roles
-        //             'value' => $current_user_role,
-        //             'compare' => '='
-        //             )
-        //     )
-        // );
-        // $users_query = new WP_User_Query($args);
-        // $users = $users_query->get_results();
-        // // pr($users_query);
 ?>
 
         <!-- HTML for Date Range Selection - Referral Sent -->
@@ -214,17 +196,9 @@ function get_referrals_sent_by_date_range($start_date, $end_date, $sent_selected
             ARRAY_A
         );
     } else {
-        // Processing filter for provided chapter
+
         // Get list of all users in selected chapter
         $our_chapter_users = userids_in_chapter( $sent_selected_chapter );
-        // $formatted_user_ids = implode( ', ' , $our_chapter_users );
-        // $referrals_all = $wpdb->get_results(
-        //     $wpdb->prepare(
-        //         "SELECT * FROM $table_name WHERE sender_id IN ( %s )",
-        //         $formatted_user_ids
-        //     ),
-        //     ARRAY_A
-        // );
 
         // Build SQL statement to retrieve all referrals with sender is in our chapter
         $where = 'WHERE sender_id IN ( ';
@@ -240,7 +214,6 @@ function get_referrals_sent_by_date_range($start_date, $end_date, $sent_selected
     }
 
     // Filter referrals based on the date range
-    // $referrals_sent = array_filter($referrals_all, function ($referral) use ($start_date, $end_date, $sent_selected_chapter) {
     $referrals_sent = array_filter($referrals_all, function ($referral) use ($start_date, $end_date) {
             $sent_date = date('Y-m-d', strtotime($referral['sent_date']));
         return ($sent_date >= $start_date && $sent_date <= $end_date);
@@ -274,14 +247,6 @@ function get_referrals_received_by_date_range($start_date, $end_date, $recv_sele
     } else {
         // Get list of all users in selected chapter
         $our_chapter_users = userids_in_chapter( $recv_selected_chapter );
-        // $formatted_user_ids = implode( ', ' , $our_chapter_users );
-        // $referrals_all = $wpdb->get_results(
-        //     $wpdb->prepare(
-        //         "SELECT * FROM $table_name WHERE recipient_id IN ( %s )",
-        //         $formatted_user_ids
-        //     ),
-        //     ARRAY_A
-        // );
 
         // Build SQL statement to retrieve all referrals with sender is in our chapter
         $where = 'WHERE recipient_id IN ( ';
@@ -338,6 +303,7 @@ function filter_referrals_ajax()
     // Chapter affiliation for sender and receiver are referenced by field 11 'Chapter Member'
     $sender_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $sender_id));
     $recipient_chapter = bp_get_profile_field_data(array('field' => 11, 'user_id' => $recipient_id));
+    
     // If the sender or the receiver of the referral is in the selected Chapter, process it. 
         $referrals_sent     = get_referrals_sent_by_date_range($start_date_sent, $end_date_sent, $sent_selected_chapter );
         $referrals_received = get_referrals_received_by_date_range($start_date_received, $end_date_received, $recv_selected_chapter);
@@ -523,4 +489,28 @@ function filter_referrals_ajax()
     }
     echo json_encode(array('sent' => $sent_html, 'received' => $received_html));
     wp_die();
+}
+
+
+/**
+ * Retrieve referral data for sent referrals within the specified date range.
+ *
+ * @param string $start_date The start date of the date range.
+ * @param string $end_date   The end date of the date range. 
+ * @return array             An array of referral data for sent referrals within the date range.
+ */
+function get_all_referrals_sent_within_date_range( $start_date, $end_date ) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'show_referrals';
+
+    $referrals_all = $wpdb->get_results(
+        $wpdb->prepare( "SELECT * FROM $table_name" ), 
+        ARRAY_A
+    );
+        
+    // Filter referrals based on the date range
+    $referrals_sent = array_filter($referrals_all, function ($referral) use ($start_date, $end_date) {
+        $sent_date = date('Y-m-d', strtotime($referral['sent_date']));
+        return ($sent_date >= $start_date && $sent_date <= $end_date);
+    } );
 }
