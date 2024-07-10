@@ -58,11 +58,12 @@ function delete_referral_callback()
 add_action('wp_ajax_update_email_notifications_toggle', 'update_email_notifications_toggle_callback');
 function update_email_notifications_toggle_callback()
 {
-    if (isset($_POST['toggle_status'])) {
+    // if (isset($_POST['toggle_status'])) {
         $toggle_status = sanitize_text_field($_POST['toggle_status']);
+        $toggle_status = 'on';   // Debug force to true
         update_user_meta(get_current_user_id(), 'referral_email_notifications', $toggle_status);
         wp_die();
-    }
+    // }
 }
 
 /**
