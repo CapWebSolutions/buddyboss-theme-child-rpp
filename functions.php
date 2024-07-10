@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 
 if (!defined('_S_VERSION')) {
   // Replace the version number of the theme on each release.
-  define('_S_VERSION', '1.0.12');
+  define('_S_VERSION', '1.1.4');
 }
 
 /**
@@ -106,10 +106,11 @@ add_action('bp_directory_members_item', 'custom_display_member_details');
 /**
  * include files
  */
-include_once get_stylesheet_directory() . '/includes/save_referral_data.php';
-include_once get_stylesheet_directory() . '/includes/display_referral_data.php';
-include_once get_stylesheet_directory() . '/includes/member_shortcode.php';
-
+function load_include_files(){
+  include_once get_stylesheet_directory() . '/includes/save_referral_data.php';
+  include_once get_stylesheet_directory() . '/includes/display_referral_data.php';
+  include_once get_stylesheet_directory() . '/includes/member_shortcode.php';
+}
 
 
 /**
@@ -465,3 +466,5 @@ function bb_custom_head() {
 }
 
 add_action('wp_head', 'bb_custom_head');
+
+load_include_files();
