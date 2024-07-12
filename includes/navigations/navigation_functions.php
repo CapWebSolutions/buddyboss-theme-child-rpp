@@ -345,14 +345,13 @@ if (!function_exists('custom_referrals_notification')) {
     function custom_referrals_notification( $referral_recipient_id )
     {
 
-        if (isset($_POST['email_notifications_toggle'])) {
-            $email_notifications_toggle = sanitize_text_field($_POST['email_notifications_toggle']);
+        // if (isset($_POST['email_notifications_toggle'])) {
+        //     $email_notifications_toggle = sanitize_text_field($_POST['email_notifications_toggle']);
 
-            if ($email_notifications_toggle == 'on') {
+        //     if ($email_notifications_toggle == 'on') {
                 $subject = 'New Referral Received';
                 $message = 'You have received a new referral. Log in to check it out!';
                 $headers = array('Content-Type: text/html; charset=UTF-8');
-                $headers[] .= 'bcc: info@capwebsolutions.com';
 
                 $user_info = get_userdata( $referral_recipient_id );
                 $to_email = $user_info->user_email;
@@ -363,7 +362,7 @@ if (!function_exists('custom_referrals_notification')) {
                 } else {
                     echo 'Error sending email.';
                 }
-            }
-        }
+        //     }
+        // }
     }
 }
